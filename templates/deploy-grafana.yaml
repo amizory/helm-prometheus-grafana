@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-grafana-deploy
+  namespace: {{ .Values.network.namespace }}
+spec:
+    replicas: {{ .Values.prometheus.replicaCount }}
+    selector:
+        matchLabels:
+            app: {{ .Release.Name }}-grafana
+    template:
+        metadata:
+            labels:
+                app: {{ .Release.Name }}-grafana
+        spec:
+            containers:
+              - name: {{ .Release.Name }}-grafana-container
+                image: {{ .Values.grafana.image.repository }}:{{ .Values.grafana.image.tag }}
+                resources:
+                    limits:
+                        memory: {{ .Values.tech.memory }}
+                        cpu: {{ .Values.tech.cpu }}
+                ports:
+                  - containerPort: {{ .Values.grafana.port }}
+                volumeMounts:
+                - name: grafana-data
+                  mountPath: /var/lib/grafana
+            volumes:
+            - name: grafana-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-pvc-grafana

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: {{ .Release.Name }}-pv-grafana
+    namespace: {{ .Values.network.namespace }}
+spec:
+    capacity:
+        storage: {{ .Values.persistentVolume.size }}
+    accessModes:
+        - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Retain
+    local:
+        path: /run/desktop/mnt/host/c/test-2
+    storageClassName: local-storage-2
+    nodeAffinity:
+        required:
+            nodeSelectorTerms:
+                - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values:
+                        - {{ .Values.node.worker }}

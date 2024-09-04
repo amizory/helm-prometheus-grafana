@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: {{ .Release.Name }}-pvc-grafana
+    namespace: {{ .Values.network.namespace }}
+spec:
+    accessModes:
+        - ReadWriteOnce
+    storageClassName: local-storage-2
+    resources:
+        requests:
+            storage: {{ .Values.persistentVolume.size }}
+    affinity:
+        nodeAffinity:
+            required:
+                nodeSelectorTerms:
+                    - matchExpressions:
+                        - key: kubernetes.io/hostname
+                          operator: In
+                          values:
+                            - {{ .Values.node.worker }}

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-prometheus-deploy
+  namespace: {{ .Values.network.namespace }}
+spec:
+    replicas: {{ .Values.prometheus.replicaCount }}
+    selector:
+        matchLabels:
+            app: {{ .Release.Name }}-prometheus
+    template:
+        metadata:
+            labels:
+                app: {{ .Release.Name }}-prometheus
+        spec:
+            containers:
+              - name: {{ .Release.Name }}-prometheus-container
+                image: {{ .Values.prometheus.image.repository }}:{{ .Values.prometheus.image.tag }}
+                resources:
+                    limits:
+                        memory: {{ .Values.tech.memory }}
+                        cpu: {{ .Values.tech.cpu }}
+                ports:
+                  - containerPort: {{ .Values.prometheus.port }}
+                volumeMounts:
+                - name: prometheus-data
+                  mountPath: /prometheus
+            volumes:
+            - name: prometheus-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-pvc-prometheus
