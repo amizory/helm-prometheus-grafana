@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Обновляем зависимости Helm
-helm dependency update
+helm dependency build
 
+# helm dependency update
 # Устанавливаем чарт monitoring
 helm install monitoring .
