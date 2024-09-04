@@ -8,8 +8,8 @@ node:
 
 #Tech
 tech:
-  memory: 1Gi
-  cpu: 500m
+  memory: 500Mi
+  cpu: 250m
 
 # Prometheus
 prometheus:
